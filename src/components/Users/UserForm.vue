@@ -148,6 +148,16 @@ const triggerStore = useTriggerStore();
 const alertStore = useAlertStore();
 const oldUserData = ref({});
 function editUserInfo() {
+  const nameReg = /[^\x00-\xff]{2}/;
+  if (!nameReg.test(userStore.newUser.name)) {
+    alertStore.updateAlert("操作失败", "用户姓名为至少两位汉字", "error");
+    return false;
+  }
+  const ageReg = /^[0-9]{1,2}$/;
+  if (userStore.newUser.age < 18 || !ageReg.test(userStore.newUser.age)) {
+    alertStore.updateAlert("操作失败", "用户年龄应在18-99岁", "error");
+    return false;
+  }
   if (userStore.isEdit) {
     alertStore.updateAlert(
       "修改成功",

@@ -5,7 +5,7 @@
       <h3>
         <span>{{ date.text1 }}</span
         >，
-        <span>Admin</span>
+        <span>{{ date.userName }} </span>
         <span class="hidden tablet:inline">，{{ date.text2 }}！</span>
       </h3>
       <div class="flex justify-center">
@@ -46,6 +46,7 @@ onBeforeUnmount(() => {
   clearInterval(timer);
 });
 const date = ref({});
+date.value.userName = localStorage.getItem("userName");
 function format(i) {
   return i < 10 ? "0" + i : "" + i;
 }

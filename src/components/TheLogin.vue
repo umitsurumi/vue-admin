@@ -31,8 +31,8 @@
         />
       </div>
       <div class="w-4/5 mx-auto py-2 flex justify-center">
-        <button class="login-btn" @click="login">登录</button>
-        <button class="login-btn">注册</button>
+        <button type="button" class="login-btn" @click="login">登录</button>
+        <button type="button" class="login-btn" @click="register">注册</button>
       </div>
     </form>
   </div>
@@ -64,13 +64,31 @@ function changeShow() {
 //实现路由跳转，本地保存登录信息
 const router = useRouter();
 function login() {
+  if (localStorage.getItem("register") === null) {
+    alertStore.updateAlert(
+      "请先注册",
+      `输入信息点击注册\r\n用户名和密码不小于5位`,
+      "error"
+    );
+    return false;
+  }
+  const register = localStorage.getItem("register");
+  if (`${form.value.username} + ${form.value.password}` !== register) {
+    alertStore.updateAlert(
+      "登录失败",
+      "请检测登录信息与注册信息是否匹配",
+      "error"
+    );
+    return false;
+  }
   localStorage.setItem(
     "user",
     JSON.stringify(form.value.username + form.value.password)
   );
   alertStore.updateAlert("登录成功", `用户${form.value.username}已登录！`);
-  form.username = "";
-  form.password = "";
+  localStorage.setItem("userName", form.value.username);
+  form.value.username = "";
+  form.value.password = "";
   const redirect = localStorage.getItem("preRoute");
   if (redirect) {
     //如果redirect存在说明当前用户是进入某页面后未登陆自动跳转到登陆页面来的，所以登陆完成后得再次回跳到该地址
@@ -78,6 +96,21 @@ function login() {
   } else {
     //否则跳转到默认的页面，首页或者其他页面
     router.push("/");
+  }
+}
+function register() {
+  if (form.value.username.length > 4 && form.value.password.length > 4) {
+    localStorage.setItem(
+      "register",
+      `${form.value.username} + ${form.value.password}`
+    );
+    alertStore.updateAlert("注册成功", `用户${form.value.username}已录入！`);
+    form.value.username = "";
+    form.value.password = "";
+  } else {
+    alertStore.updateAlert("注册失败", `用户名和密码不小于5位`, "error");
+    form.value.username = "";
+    form.value.password = "";
   }
 }
 </script>

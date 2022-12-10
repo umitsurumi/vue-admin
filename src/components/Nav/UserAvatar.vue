@@ -7,7 +7,7 @@
       class="mt-2 cursor-pointer"
       shape="square"
       :size="45"
-      src="/src/assets/avatar.gif"
+      src="https://github.com/umitsurumi/vue-admin/blob/main/src/assets/avatar.gif?raw=true"
     />
     <div
       class="dropdownMenu"
@@ -20,7 +20,7 @@
       <div class="py-1" role="none">
         <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
         <a
-          href="#"
+          href="https://github.com/umitsurumi/vue-admin"
           class="dropdownItem"
           role="menuitem"
           tabindex="-1"
@@ -54,8 +54,11 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { RouterLink } from "vue-router";
-
+import { useAlertStore } from "@/stores/alertStore";
+const alertStore = useAlertStore();
 function logout() {
+  const username = localStorage.getItem("userName");
+  alertStore.updateAlert("操作成功", `用户${username}退出登录！`);
   localStorage.removeItem("user");
 }
 
